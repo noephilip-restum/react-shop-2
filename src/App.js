@@ -1,5 +1,8 @@
-import React, { Component } from 'react';
-import './App.css';
+import React, { Component } from "react";
+import "./App.css";
+
+import Product from "./components/Product";
+import CartItem from "./components/CartItem";
 
 export default class App extends Component {
   constructor() {
@@ -11,39 +14,52 @@ export default class App extends Component {
           id: 1,
           title: "Fisherman's Hat",
           description:
-            'Headgear commonly used by fishermen. Increases fishing skill marginally.',
+            "Headgear commonly used by fishermen. Increases fishing skill marginally.",
           price: 12.99,
-          imageUrl: 'https://via.placeholder.com/150x150',
+          imageUrl: "https://via.placeholder.com/150x150"
         },
         {
           id: 2,
-          title: 'Metal Hat',
-          description: 'Uncomfortable, but sturdy.',
+          title: "Metal Hat",
+          description: "Uncomfortable, but sturdy.",
           price: 8.99,
-          imageUrl: 'https://via.placeholder.com/150x150',
-        },
+          imageUrl: "https://via.placeholder.com/150x150"
+        }
       ],
       beachGear: [
         {
           id: 3,
-          title: 'Tent',
-          description: 'Portable shelter.',
+          title: "Tent",
+          description: "Portable shelter.",
           price: 32.99,
-          imageUrl: 'https://via.placeholder.com/150x150',
-        },
+          imageUrl: "https://via.placeholder.com/150x150"
+        }
       ],
+      toggle: false
     };
   }
 
-  addToCart(item) {
+  addToCart = item => {
     this.setState({
-      cart: [...this.state.cart, item],
+      cart: [...this.state.cart, item]
     });
-  }
+  };
 
   checkout = () => {
     this.setState({ cart: [] });
-    alert('Purchase is complete!');
+    alert("Purchase is complete!");
+  };
+
+  deleteFromCart = id => {
+    this.setState({
+      cart: this.state.cart.filter(i => i.id !== id)
+    });
+  };
+
+  toggleView = () => {
+    this.state.toggle
+      ? this.setState({ toggle: false })
+      : this.setState({ toggle: true });
   };
 
   render() {
@@ -51,34 +67,25 @@ export default class App extends Component {
       <div className="App">
         <section className="products">
           <h1>Products</h1>
+          <button onClick={this.toggleView}>Toggle View</button>
           <h2>Hats</h2>
           {this.state.hats.map(item => (
-            <div key={item.id} className="product">
-              <img src={item.imageUrl} />
-              <div className="product-info">
-                <h4>{item.title}</h4>
-                <p>{item.description}</p>
-                <p>{item.price}</p>
-                <button onClick={() => this.addToCart(item)}>
-                  Add to Cart
-                </button>
-              </div>
-            </div>
+            <Product
+              key={item.id}
+              item={item}
+              addToCart={this.addToCart}
+              toggle={this.state.toggle}
+            />
           ))}
 
           <h2>Beach Gear</h2>
           {this.state.beachGear.map(item => (
-            <div key={item.id} className="product">
-              <img src={item.imageUrl} />
-              <div className="product-info">
-                <h4>{item.title}</h4>
-                <p>{item.description}</p>
-                <p>{item.price}</p>
-                <button onClick={() => this.addToCart(item)}>
-                  Add to Cart
-                </button>
-              </div>
-            </div>
+            <Product
+              key={item.id}
+              item={item}
+              addToCart={this.addToCart}
+              toggle={this.state.toggle}
+            />
           ))}
         </section>
 
@@ -93,14 +100,11 @@ export default class App extends Component {
           </h2>
           <button onClick={this.checkout}>Checkout</button>
           {this.state.cart.map(item => (
-            <div key={item.id} className="product">
-              <img src={item.imageUrl} />
-              <div className="product-info">
-                <h4>{item.title}</h4>
-                <p>{item.description}</p>
-                <p>{item.price}</p>
-              </div>
-            </div>
+            <CartItem
+              key={item.id}
+              item={item}
+              deleteFromCart={this.deleteFromCart}
+            />
           ))}
         </section>
       </div>
